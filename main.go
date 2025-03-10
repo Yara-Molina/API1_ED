@@ -26,7 +26,7 @@ func main() {
 
 	// Configuración de CORS usando gin-contrib/cors
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"},         // Origen permitido
+		AllowOrigins:     []string{"http://54.157.214.150:4200"},    // Origen permitido
 		AllowMethods:     []string{"POST", "GET", "OPTIONS"},        // Métodos permitidos
 		AllowHeaders:     []string{"Content-Type", "Authorization"}, // Encabezados permitidos
 		AllowCredentials: true,
@@ -35,6 +35,6 @@ func main() {
 	// Definir las rutas
 	router.POST("/loans", loanController.CreateLoan)
 
-	log.Println("Servidor corriendo en http://localhost:8080")
+	log.Println("Servidor corriendo en http://54.157.214.150:8080")
 	router.Run(":8080")
 }
