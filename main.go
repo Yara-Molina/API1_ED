@@ -7,29 +7,34 @@ import (
 
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// Inicializar infraestructura (conexión a RabbitMQ, base de datos, etc.)
+
 	eventService, err := infraestructure.Setup()
 	if err != nil {
 		log.Fatal("Failed to set up infrastructure: ", err)
 	}
 
-	// Crear instancia del caso de uso
 	loanUseCase := &usecase.LoanUseCase{EventService: *eventService}
 
-	// Crear controlador
 	loanController := controllers.NewLoanController(loanUseCase)
 
-	// Configurar Gin
 	router := gin.Default()
 
-	// Definir rutas
+	// Configuración de CORS usando gin-contrib/cors
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:4200"},         // Origen permitido
+		AllowMethods:     []string{"POST", "GET", "OPTIONS"},        // Métodos permitidos
+		AllowHeaders:     []string{"Content-Type", "Authorization"}, // Encabezados permitidos
+		AllowCredentials: true,
+	}))
+
+	// Definir las rutas
 	router.POST("/loans", loanController.CreateLoan)
 
-	// Iniciar servidor en el puerto 8080
 	log.Println("Servidor corriendo en http://localhost:8080")
 	router.Run(":8080")
 }
